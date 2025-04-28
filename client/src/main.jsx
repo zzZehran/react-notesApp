@@ -7,6 +7,7 @@ import "./index.css";
 import App from "./App.jsx";
 import LoginPage from "./pages/Login_Page.jsx";
 import OverviewNotes from "./pages/Overview_Notes.jsx";
+import CreateNote from "./pages/Create_Note.jsx";
 
 createRoot(document.getElementById("root")).render(
   <AuthProvider>
@@ -15,6 +16,7 @@ createRoot(document.getElementById("root")).render(
         <Route path="/" element={<App />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/notes" element={<OverviewNotes />} />
+        <Route path="/new" element={<CreateNote />} />
       </Routes>
     </BrowserRouter>
   </AuthProvider>

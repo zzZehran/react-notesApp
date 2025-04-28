@@ -33,7 +33,7 @@ export default function OverviewNotes() {
     <>
       <div className="fixed bottom-10 right-10">
         <span className="rounded-xl bg-black py-4 px-5 text-white font-bold text-xl hover:shadow-xl">
-          +
+          <a href="/new">+</a>
         </span>
       </div>
       <div className="container mx-auto pt-10 h-screen">

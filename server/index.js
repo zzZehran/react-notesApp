@@ -51,8 +51,8 @@ app.post("/register", async (req, res) => {
   res.send({ message: "Successfully created user!" });
 });
 
-app.post("/createNote", async (req, res) => {
-  const { title, body, user = "680e5fecd64ace2f00e311a6" } = req.body;
+app.post("/newNote", async (req, res) => {
+  const { title, body, user } = req.body;
   const newNote = new Note({
     title,
     body,
@@ -60,7 +60,7 @@ app.post("/createNote", async (req, res) => {
   });
   await newNote.save();
   console.log(newNote);
-  res.send(newNote);
+  res.status(200).send({ message: "Success" });
 });
 
 app.get("/fetchNotes", async (req, res) => {

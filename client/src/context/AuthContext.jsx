@@ -3,7 +3,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(undefined);
 
   useEffect(() => {
     async function checkSession() {
@@ -12,7 +12,6 @@ export function AuthProvider({ children }) {
         credentials: "include",
       });
       const data = await response.json();
-      console.log("AuthContext Data Response: ", data);
       setUser(data.user);
     }
     checkSession();

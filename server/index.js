@@ -16,8 +16,8 @@ const sessionOptions = {
   secret: "watashinosoulsociety",
   resave: "false",
   saveUninitialized: true,
-  cookies: {
-    secure: true,
+  cookie: {
+    secure: false,
   },
 };
 app.use(session(sessionOptions));
@@ -31,7 +31,7 @@ app.post("/login", async (req, res) => {
   const user = await User.findOne({ username });
   const validPassword = await bcrypt.compare(password, user.password);
   if (validPassword) {
-    console.log(user);
+    // console.log(user);
     req.session.user = user;
     res.send({ message: "Welcome!", user: req.session.user });
   } else {
@@ -52,7 +52,7 @@ app.post("/register", async (req, res) => {
 });
 
 app.post("/createNote", async (req, res) => {
-  const { title, body, user = "6808b207a8680086684f279d" } = req.body;
+  const { title, body, user = "680e5fecd64ace2f00e311a6" } = req.body;
   const newNote = new Note({
     title,
     body,
@@ -60,12 +60,24 @@ app.post("/createNote", async (req, res) => {
   });
   await newNote.save();
   console.log(newNote);
+  res.send(newNote);
+});
+
+app.get("/fetchNotes", async (req, res) => {
+  if (req.session.user) {
+    const notes = await Note.find({ user: req.session.user._id });
+    res.status(200).send({ notes, message: "Successfully fetched notes" });
+  } else {
+    res.status(403).send({ message: "Login or sign up first!" });
+  }
 });
 
 app.post("/checkSession", (req, res) => {
   if (req.session.user) {
+    console.log("User is there", req.session.user);
     res.status(200).send({ user: req.session.user });
   } else {
+    console.log("User is not there", req.session.user);
     res.status(403).send({ message: "Please login or sign up!" });
   }
 });

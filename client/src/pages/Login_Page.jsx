@@ -1,25 +1,19 @@
 import React from "react";
 import { useNavigate } from "react-router";
+import { useAuth } from "../context/AuthContext";
 
 export default function LoginPage() {
   let navigate = useNavigate();
 
+  const { user, setUser } = useAuth();
   const [isLoading, setIsLoading] = React.useState(false);
-  const [isData, setIsData] = React.useState();
 
   React.useEffect(() => {
-    async function checkSession() {
-      const response = await fetch("http://localhost:1000/checkSession", {
-        method: "POST",
-        credentials: "include",
-      });
-      const data = await response.json();
-      if (data.user) {
-        navigate("/notes");
-      }
+    if (user) {
+      console.log("redirecting to /notes", user.user);
+      navigate("/notes");
     }
-    checkSession();
-  }, [isData]);
+  }, [user]);
 
   async function loginUser(username, password) {
     setIsLoading(true);
@@ -32,10 +26,10 @@ export default function LoginPage() {
       body: JSON.stringify({ username, password }),
     });
     const data = await response.json();
-    setIsData(data);
+    setUser(data.user);
     setIsLoading(false);
   }
-  // console.log("State: ", isData);
+  // console.log("User: ", user);
 
   function handleForm(formData) {
     const username = formData.get("username");
@@ -52,16 +46,15 @@ export default function LoginPage() {
           </span>
         </div>
       )}
-      {isData && isData.user && (
+      {user && user.username && (
         <div>
           <span className="block text-center px-5 py-1.5 bg-green-600 text-white font-bold rounded">
-            {isData.user.username}
+            {user.username}
             <br />
-            {isData.user._id}
+            {user._id}
           </span>
         </div>
       )}
-
       <h1 className="text-center text-3xl font-bold text-black">LOGIN</h1>
       <form action={handleForm} className="flex flex-col space-y-4">
         <input

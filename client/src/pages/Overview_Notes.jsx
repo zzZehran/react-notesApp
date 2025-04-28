@@ -1,7 +1,33 @@
 import React from "react";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router";
 
 export default function OverviewNotes() {
-  const arr = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5];
+  const { user, setUser } = useAuth();
+  let navigate = useNavigate();
+
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [isNotes, setIsNotes] = React.useState([]);
+
+  React.useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user]);
+
+  React.useEffect(() => {
+    async function fetchNotes() {
+      setIsLoading(true);
+      const response = await fetch("http://localhost:1000/fetchNotes", {
+        method: "GET",
+        credentials: "include",
+      });
+      const data = await response.json();
+      setIsNotes(data.notes);
+      setIsLoading(false);
+    }
+    fetchNotes();
+  }, []);
 
   return (
     <>
@@ -15,20 +41,14 @@ export default function OverviewNotes() {
           ALL NOTES...
         </h1>
         <div className="flex flex-wrap gap-10">
-          {arr.map((el, index) => {
+          {isNotes.map((el, index) => {
             return (
               <div
                 key={index}
                 className="bg-white border-2 border-solid rounded-md px-5 py-3 hover:shadow-xl"
               >
-                <h2 className="font-semibold text-xl">Title</h2>
-                <p className="text-gray-600">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis
-                  doloremque modi earum. Optio, minus dolorum Lorem ipsum dolor
-                  sit amet consectetur, adipisicing elit. Voluptatum, ratione
-                  architecto! Itaque soluta et in doloremque quaerat animi,
-                  debitis adipisci!...
-                </p>
+                <h2 className="font-semibold text-xl">{el.title}</h2>
+                <p className="text-gray-600">{el.body}</p>
               </div>
             );
           })}

@@ -1,27 +1,46 @@
 import React from "react";
+import { useNavigate } from "react-router";
 
 export default function LoginPage() {
+  let navigate = useNavigate();
+
   const [isLoading, setIsLoading] = React.useState(false);
   const [isData, setIsData] = React.useState();
 
-  async function registerUser(username, password) {
+  React.useEffect(() => {
+    async function checkSession() {
+      const response = await fetch("http://localhost:1000/checkSession", {
+        method: "POST",
+        credentials: "include",
+      });
+      const data = await response.json();
+      if (data.user) {
+        navigate("/notes");
+      }
+    }
+    checkSession();
+  }, [isData]);
+
+  async function loginUser(username, password) {
     setIsLoading(true);
     const response = await fetch("http://localhost:1000/login", {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ username, password }),
     });
     const data = await response.json();
-    console.log(data);
+    setIsData(data);
     setIsLoading(false);
   }
+  // console.log("State: ", isData);
 
   function handleForm(formData) {
     const username = formData.get("username");
     const password = formData.get("password");
-    registerUser(username, password);
+    loginUser(username, password);
   }
 
   return (
@@ -33,8 +52,18 @@ export default function LoginPage() {
           </span>
         </div>
       )}
+      {isData && isData.user && (
+        <div>
+          <span className="block text-center px-5 py-1.5 bg-green-600 text-white font-bold rounded">
+            {isData.user.username}
+            <br />
+            {isData.user._id}
+          </span>
+        </div>
+      )}
+
       <h1 className="text-center text-3xl font-bold text-black">LOGIN</h1>
-      <form action="" className="flex flex-col space-y-4">
+      <form action={handleForm} className="flex flex-col space-y-4">
         <input
           type="text"
           className="px-3 py-1 bg-white border-2 border-solid rounded"

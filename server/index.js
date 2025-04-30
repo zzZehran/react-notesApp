@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const session = require("express-session");
+const mongoose = require("mongoose");
 
 const db = require("./utils/db");
 const bcrypt = require("bcrypt");
@@ -23,7 +24,8 @@ const sessionOptions = {
 app.use(session(sessionOptions));
 
 app.get("/", (req, res) => {
-  res.send("Welcome to express!");
+  const bool = mongoose.isValidObjectId("680e5fecd64ace2f00e311a6");
+  res.send(`Welcome to express! ${bool}`);
 });
 
 app.post("/login", async (req, res) => {
@@ -59,7 +61,6 @@ app.post("/newNote", async (req, res) => {
     user,
   });
   await newNote.save();
-  console.log("New note created: ", newNote);
   res.status(200).send({ message: "Success" });
 });
 

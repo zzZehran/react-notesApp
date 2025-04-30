@@ -71,6 +71,11 @@ app.get("/fetchNotes", async (req, res) => {
     res.status(403).send({ message: "Login or sign up first!" });
   }
 });
+app.get("/fetchNotes/:id", async (req, res) => {
+  const { id } = req.params;
+  const note = await Note.findById({ _id: id });
+  res.status(200).send({ note });
+});
 
 app.post("/checkSession", (req, res) => {
   if (req.session.user) {

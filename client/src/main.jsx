@@ -9,6 +9,7 @@ import LoginPage from "./pages/Login_Page.jsx";
 import OverviewNotes from "./pages/Overview_Notes.jsx";
 import CreateNote from "./pages/Create_Note.jsx";
 import ViewNote from "./pages/View_Note.jsx";
+import UpdateNote from "./pages/Update_Note.jsx";
 
 createRoot(document.getElementById("root")).render(
   <AuthProvider>
@@ -19,6 +20,7 @@ createRoot(document.getElementById("root")).render(
         <Route path="/notes" element={<OverviewNotes />} />
         <Route path="/new" element={<CreateNote />} />
         <Route path="/notes/:id" element={<ViewNote />} />
+        <Route path="/update/:id" element={<UpdateNote />} />
       </Routes>
     </BrowserRouter>
   </AuthProvider>

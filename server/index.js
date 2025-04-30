@@ -76,6 +76,15 @@ app.get("/fetchNotes/:id", async (req, res) => {
   const note = await Note.findById({ _id: id });
   res.status(200).send({ note });
 });
+app.patch("/updateNote/:id", async (req, res) => {
+  const { id } = req.params;
+  const { title, body } = req.body;
+  const note = await Note.findById({ _id: id });
+  note.title = title;
+  note.body = body;
+  await note.save();
+  res.status(200).send({ note, message: "Success" });
+});
 
 app.post("/checkSession", (req, res) => {
   if (req.session.user) {

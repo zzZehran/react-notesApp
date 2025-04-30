@@ -67,12 +67,18 @@ export default function OverviewNotes() {
                 key={el._id}
                 className="bg-white border-2 border-solid rounded-md px-5 py-3 hover:shadow-xl"
               >
-                <div className="flex justify-end gap-3">
+                <div className="flex justify-center mb-3 gap-3">
                   <a
                     href={`/notes/${el._id}`}
                     className="bg-black text-white py-1 px-2 rounded font-bold cursor-pointer"
                   >
                     View
+                  </a>
+                  <a
+                    href={`/update/${el._id}`}
+                    className="bg-black text-white py-1 px-2 rounded font-bold cursor-pointer"
+                  >
+                    Update
                   </a>
                   <button
                     onClick={() => deleteNote(el._id)}

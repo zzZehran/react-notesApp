@@ -47,7 +47,7 @@ app.post("/register", async (req, res) => {
     password: hash,
   });
   await newUser.save();
-  console.log(newUser);
+  console.log("New user created: ", newUser);
   res.send({ message: "Successfully created user!" });
 });
 
@@ -59,7 +59,7 @@ app.post("/newNote", async (req, res) => {
     user,
   });
   await newNote.save();
-  console.log(newNote);
+  console.log("New note created: ", newNote);
   res.status(200).send({ message: "Success" });
 });
 
@@ -74,12 +74,18 @@ app.get("/fetchNotes", async (req, res) => {
 
 app.post("/checkSession", (req, res) => {
   if (req.session.user) {
-    console.log("User is there", req.session.user);
     res.status(200).send({ user: req.session.user });
   } else {
-    console.log("User is not there", req.session.user);
     res.status(403).send({ message: "Please login or sign up!" });
   }
+});
+
+app.delete("/deleteNote", (req, res) => {
+  const { id } = req.body;
+  setTimeout(async () => {
+    const deletedNote = await Note.deleteOne({ _id: id });
+    res.status(200).send({ message: "Deleted Note successfully" });
+  }, 500);
 });
 
 const port = 1000;

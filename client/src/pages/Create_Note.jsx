@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 
@@ -6,6 +6,12 @@ export default function CreateNote() {
   let navigate = useNavigate();
 
   const { user, setUser } = useAuth();
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user]);
 
   async function submitNote(title, body) {
     const response = await fetch("http://localhost:1000/newNote", {

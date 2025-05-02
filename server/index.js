@@ -23,6 +23,21 @@ const sessionOptions = {
 };
 app.use(session(sessionOptions));
 
+function checkId(req, res, next) {
+  const { id } = req.params;
+  if (mongoose.isValidObjectId(id)) {
+    next();
+  } else {
+    next("Some error");
+  }
+}
+function checkUser(req, res, next) {
+  if (req.session.user) {
+    return next();
+  }
+  next("Please login+ first!");
+}
+
 app.get("/", (req, res) => {
   const bool = mongoose.isValidObjectId("680e5fecd64ace2f00e311a6");
   res.send(`Welcome to express! ${bool}`);
@@ -33,7 +48,6 @@ app.post("/login", async (req, res) => {
   const user = await User.findOne({ username });
   const validPassword = await bcrypt.compare(password, user.password);
   if (validPassword) {
-    // console.log(user);
     req.session.user = user;
     res.send({ message: "Welcome!", user: req.session.user });
   } else {
@@ -53,14 +67,15 @@ app.post("/register", async (req, res) => {
   res.send({ message: "Successfully created user!" });
 });
 
-app.post("/newNote", async (req, res) => {
-  const { title, body, user } = req.body;
+app.post("/newNote", checkUser, async (req, res) => {
+  const { title, body, user = "680e5fecd64ace2f00e311a6" } = req.body;
   const newNote = new Note({
     title,
     body,
     user,
   });
-  await newNote.save();
+  // await newNote.save();
+  console.log("newNote: ", newNote);
   res.status(200).send({ message: "Success" });
 });
 
@@ -72,12 +87,12 @@ app.get("/fetchNotes", async (req, res) => {
     res.status(403).send({ message: "Login or sign up first!" });
   }
 });
-app.get("/fetchNotes/:id", async (req, res) => {
+app.get("/fetchNotes/:id", checkUser, checkId, async (req, res) => {
   const { id } = req.params;
   const note = await Note.findById({ _id: id });
   res.status(200).send({ note });
 });
-app.patch("/updateNote/:id", async (req, res) => {
+app.patch("/updateNote/:id", checkId, async (req, res) => {
   const { id } = req.params;
   const { title, body } = req.body;
   const note = await Note.findById({ _id: id });
@@ -101,6 +116,11 @@ app.delete("/deleteNote", (req, res) => {
     const deletedNote = await Note.deleteOne({ _id: id });
     res.status(200).send({ message: "Deleted Note successfully" });
   }, 500);
+});
+
+app.use((err, req, res, next) => {
+  console.log(err);
+  res.status(404).send({ message: err });
 });
 
 const port = 1000;

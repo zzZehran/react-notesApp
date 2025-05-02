@@ -14,6 +14,8 @@ export default function UpdateNote() {
     async function fetchNote() {
       const response = await fetch(`http://localhost:1000/fetchNotes/${id}`);
       const data = await response.json();
+      console.log("response", response);
+      console.log("data", data.message);
       setData(data.note);
     }
     fetchNote();

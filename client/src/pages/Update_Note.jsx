@@ -5,14 +5,21 @@ import { useNavigate, useParams } from "react-router";
 export default function UpdateNote() {
   const navigate = useNavigate();
   const { id } = useParams();
-  console.log(id);
-
-  const { user, setUser } = useAuth();
+  const { user, setUser, loading } = useAuth();
   const [data, setData] = useState();
 
   React.useEffect(() => {
+    if (!loading && !user) {
+      navigate("/login");
+    }
+  }, [user, loading]);
+
+  React.useEffect(() => {
     async function fetchNote() {
-      const response = await fetch(`http://localhost:1000/fetchNotes/${id}`);
+      const response = await fetch(`http://localhost:1000/fetchNotes/${id}`, {
+        method: "GET",
+        credentials: "include",
+      });
       const data = await response.json();
       console.log("response", response);
       console.log("data", data.message);
@@ -44,7 +51,12 @@ export default function UpdateNote() {
 
   return (
     <div className="container flex flex-col justify-center items-center mx-auto mt-10 space-y-10">
-      {/* <h2 className="text-3xl font-bold">New Note</h2> */}
+      <a
+        href="/notes"
+        className="bg-black text-white py-1 px-2 rounded font-bold cursor-pointer w-fit"
+      >
+        Go back
+      </a>
       {data && (
         <form action={handleForm} className="flex flex-col w-1/2 space-y-5">
           <input

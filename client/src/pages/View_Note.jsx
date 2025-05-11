@@ -1,14 +1,16 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate, useParams } from "react-router";
 import { useAuth } from "../context/AuthContext";
 
 export default function ViewNote() {
   const navigate = useNavigate();
-  const { user, setUser } = useAuth();
+  const { user, setUser, loading } = useAuth();
 
-  if (!user) {
-    navigate("/login");
-  }
+  React.useEffect(() => {
+    if (!loading && !user) {
+      navigate("/login");
+    }
+  }, [user, loading]);
 
   const { id } = useParams();
   const [note, setNote] = React.useState();
@@ -27,6 +29,12 @@ export default function ViewNote() {
   }, []);
   return (
     <div className="container mx-auto flex flex-col mt-10 gap-10">
+      <a
+        href="/notes"
+        className="bg-black text-white py-1 px-2 rounded font-bold cursor-pointer w-fit"
+      >
+        Go back
+      </a>
       {note && (
         <>
           <h1 className="text-4xl font-bold">{note.title}</h1>

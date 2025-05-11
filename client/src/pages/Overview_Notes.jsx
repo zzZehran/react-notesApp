@@ -42,6 +42,16 @@ export default function OverviewNotes() {
     setIsLoading(false);
   }
 
+  async function logout() {
+    const response = await fetch("http://localhost:1000/logout", {
+      method: "GET",
+      credentials: "include",
+    });
+    if (response.status === 200) {
+      setUser(undefined);
+    }
+  }
+
   return (
     <>
       {isLoading && (
@@ -57,42 +67,53 @@ export default function OverviewNotes() {
         </span>
       </div>
       <div className="container mx-auto pt-10 h-screen">
-        <h1 className="font-bold text-3xl mb-10 border-b-2 w-1/8">
-          ALL NOTES...
-        </h1>
+        <div className="flex justify-between items-center">
+          <h1 className="font-bold text-3xl mb-10 border-b-2 w-1/8">
+            ALL NOTES...
+          </h1>
+          {/* <form action={logout}> */}
+          <a
+            className="bg-black text-white text-xl py-2 px-3 rounded font-bold cursor-pointer"
+            onClick={logout}
+          >
+            Logout
+          </a>
+          {/* </form> */}
+        </div>
 
         <div className="flex flex-wrap gap-10">
-          {isNotes.map((el, index) => {
-            return (
-              <div
-                key={el._id}
-                className="bg-white border-2 border-solid rounded-md px-5 py-3 hover:shadow-xl"
-              >
-                <div className="flex justify-center mb-3 gap-3">
-                  <a
-                    href={`/notes/${el._id}`}
-                    className="bg-black text-white py-1 px-2 rounded font-bold cursor-pointer"
-                  >
-                    View
-                  </a>
-                  <a
-                    href={`/update/${el._id}`}
-                    className="bg-black text-white py-1 px-2 rounded font-bold cursor-pointer"
-                  >
-                    Update
-                  </a>
-                  <button
-                    onClick={() => deleteNote(el._id)}
-                    className="bg-black text-white py-1 px-2 rounded font-bold cursor-pointer"
-                  >
-                    Del
-                  </button>
+          {isNotes &&
+            isNotes.map((el, index) => {
+              return (
+                <div
+                  key={el._id}
+                  className="bg-white border-2 border-solid rounded-md px-5 py-3 hover:shadow-xl"
+                >
+                  <div className="flex justify-center mb-3 gap-3">
+                    <a
+                      href={`/notes/${el._id}`}
+                      className="bg-black text-white py-1 px-2 rounded font-bold cursor-pointer"
+                    >
+                      View
+                    </a>
+                    <a
+                      href={`/update/${el._id}`}
+                      className="bg-black text-white py-1 px-2 rounded font-bold cursor-pointer"
+                    >
+                      Update
+                    </a>
+                    <button
+                      onClick={() => deleteNote(el._id)}
+                      className="bg-black text-white py-1 px-2 rounded font-bold cursor-pointer"
+                    >
+                      Del
+                    </button>
+                  </div>
+                  <h2 className="font-semibold text-xl">{el.title}</h2>
+                  <p className="text-gray-600">{el.body.split(0.5) + "..."}</p>
                 </div>
-                <h2 className="font-semibold text-xl">{el.title}</h2>
-                <p className="text-gray-600">{el.body.split(0.5) + "..."}</p>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
       </div>
     </>

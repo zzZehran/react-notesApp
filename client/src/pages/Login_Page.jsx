@@ -69,9 +69,15 @@ export default function LoginPage() {
           placeholder="Password"
           name="password"
         />
-        <button className="py-1.5 bg-black text-white font-bold rounded">
+        <button className="py-1.5 mb-2 bg-black text-white font-bold rounded">
           LOGIN
         </button>
+        <h6 className="text-sm">
+          Not registered?
+          <a href="/register">
+            <span className="text-blue-600 ml-1">Register here!</span>
+          </a>
+        </h6>
       </form>
     </div>
   );

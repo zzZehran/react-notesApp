@@ -10,6 +10,7 @@ import OverviewNotes from "./pages/Overview_Notes.jsx";
 import CreateNote from "./pages/Create_Note.jsx";
 import ViewNote from "./pages/View_Note.jsx";
 import UpdateNote from "./pages/Update_Note.jsx";
+import RegisterPage from "./pages/Register_Page.jsx";
 
 createRoot(document.getElementById("root")).render(
   <AuthProvider>
@@ -17,6 +18,7 @@ createRoot(document.getElementById("root")).render(
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/notes" element={<OverviewNotes />} />
         <Route path="/new" element={<CreateNote />} />
         <Route path="/notes/:id" element={<ViewNote />} />

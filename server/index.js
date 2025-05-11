@@ -58,6 +58,7 @@ app.post("/register", async (req, res) => {
     password: hash,
   });
   await newUser.save();
+  req.session.user = newUser;
   console.log("New user created: ", newUser);
   res.send({ message: "Successfully created user!" });
 });
@@ -101,6 +102,12 @@ app.post("/checkSession", (req, res) => {
   } else {
     res.status(403).send({ message: "Please login or sign up!" });
   }
+});
+
+app.get("/logout", checkUser, (req, res) => {
+  console.log("req on logout");
+  req.session.user = undefined;
+  res.status(200).send({ message: "Successfully logged out!" });
 });
 
 app.delete("/deleteNote", checkUser, (req, res) => {

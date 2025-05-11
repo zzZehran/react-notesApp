@@ -3,17 +3,18 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 
 export default function OverviewNotes() {
-  const { user, setUser } = useAuth();
+  const { user, setUser, loading } = useAuth();
   let navigate = useNavigate();
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [isNotes, setIsNotes] = React.useState([]);
 
   React.useEffect(() => {
-    if (!user) {
+    console.log(loading, user);
+    if (!loading && !user) {
       navigate("/login");
     }
-  }, [user]);
+  }, [user, loading]);
 
   React.useEffect(() => {
     async function fetchNotes() {

@@ -1,18 +1,20 @@
-import { useEffect } from "react";
+import React from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 
 export default function CreateNote() {
   let navigate = useNavigate();
 
-  const { user, setUser, isLoading, setIsLoading } = useAuth();
-  console.log(user);
+  const { user, loading } = useAuth();
 
-  useEffect(() => {
-    if (!user) {
-      navigate("/login");
+  React.useEffect(() => {
+    console.log(loading, user);
+    if (!loading && !user) {
+      // true false | false true
+      // navigate("/login");
+      console.log("navigating to login booo");
     }
-  }, [user]);
+  }, [user, loading]);
 
   async function submitNote(title, body) {
     const response = await fetch("http://localhost:1000/newNote", {

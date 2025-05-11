@@ -3,12 +3,11 @@ import { createContext, useContext, useState, useEffect } from "react";
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState();
-  const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState(undefined);
+  const [loading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function checkSession() {
-      setIsLoading(true);
       const response = await fetch("http://localhost:1000/checkSession", {
         method: "POST",
         credentials: "include",
@@ -21,7 +20,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser, isLoading, setIsLoading }}>
+    <AuthContext.Provider value={{ user, setUser, loading }}>
       {children}
     </AuthContext.Provider>
   );

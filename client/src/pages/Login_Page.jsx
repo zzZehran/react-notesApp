@@ -5,15 +5,16 @@ import { useAuth } from "../context/AuthContext";
 export default function LoginPage() {
   let navigate = useNavigate();
 
-  const { user, setUser } = useAuth();
+  const { user, setUser, loading } = useAuth();
+  console.log("Rendering: ", user);
   const [isLoading, setIsLoading] = React.useState(false);
 
   React.useEffect(() => {
-    if (user) {
-      console.log("redirecting to /notes", user.user);
+    console.log(loading, user);
+    if (!loading && user) {
       navigate("/notes");
     }
-  }, [user]);
+  }, [user, loading]);
 
   async function loginUser(username, password) {
     setIsLoading(true);
@@ -29,7 +30,6 @@ export default function LoginPage() {
     setUser(data.user);
     setIsLoading(false);
   }
-  // console.log("User: ", user);
 
   function handleForm(formData) {
     const username = formData.get("username");

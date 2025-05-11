@@ -15,7 +15,7 @@ createRoot(document.getElementById("root")).render(
   <AuthProvider>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />} />
+        {/* <Route path="/" element={<App />} /> */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/notes" element={<OverviewNotes />} />
         <Route path="/new" element={<CreateNote />} />

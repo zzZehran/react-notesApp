@@ -5,7 +5,8 @@ import { useNavigate } from "react-router";
 export default function CreateNote() {
   let navigate = useNavigate();
 
-  const { user, setUser } = useAuth();
+  const { user, setUser, isLoading, setIsLoading } = useAuth();
+  console.log(user);
 
   useEffect(() => {
     if (!user) {

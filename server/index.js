@@ -35,13 +35,8 @@ function checkUser(req, res, next) {
   if (req.session.user) {
     return next();
   }
-  next("Please login+ first!");
+  next("Please login first!");
 }
-
-app.get("/", (req, res) => {
-  const bool = mongoose.isValidObjectId("680e5fecd64ace2f00e311a6");
-  res.send(`Welcome to express! ${bool}`);
-});
 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
@@ -74,25 +69,23 @@ app.post("/newNote", checkUser, async (req, res) => {
     body,
     user,
   });
-  // await newNote.save();
+  await newNote.save();
   console.log("newNote: ", newNote);
   res.status(200).send({ message: "Success" });
 });
 
-app.get("/fetchNotes", async (req, res) => {
-  if (req.session.user) {
-    const notes = await Note.find({ user: req.session.user._id });
-    res.status(200).send({ notes, message: "Successfully fetched notes" });
-  } else {
-    res.status(403).send({ message: "Login or sign up first!" });
-  }
+app.get("/fetchNotes", checkUser, async (req, res) => {
+  const notes = await Note.find({ user: req.session.user._id });
+  res.status(200).send({ notes, message: "Successfully fetched notes" });
 });
+
 app.get("/fetchNotes/:id", checkUser, checkId, async (req, res) => {
   const { id } = req.params;
   const note = await Note.findById({ _id: id });
   res.status(200).send({ note });
 });
-app.patch("/updateNote/:id", checkId, async (req, res) => {
+
+app.patch("/updateNote/:id", checkUser, checkId, async (req, res) => {
   const { id } = req.params;
   const { title, body } = req.body;
   const note = await Note.findById({ _id: id });
@@ -110,7 +103,7 @@ app.post("/checkSession", (req, res) => {
   }
 });
 
-app.delete("/deleteNote", (req, res) => {
+app.delete("/deleteNote", checkUser, (req, res) => {
   const { id } = req.body;
   setTimeout(async () => {
     const deletedNote = await Note.deleteOne({ _id: id });
